@@ -3,10 +3,16 @@ pub mod regex;
 pub mod transition;
 
 use nfa::{NFABuilder, NFA};
-use regex::Regex;
+use regex::{Quantifier, Regex};
 
 fn main() {
-    let regex = Regex::Concat(Box::new(Regex::Char('a')), Box::new(Regex::Char('b')));
+    let regex = Regex::Concat(
+        Box::new(Regex::Quantified(
+            Quantifier::Kleene,
+            Box::new(Regex::Char('a')),
+        )),
+        Box::new(Regex::Char('b')),
+    );
     /*
     let regex = Regex::Concat(
         Box::new(Regex::Char('a')),
@@ -18,9 +24,8 @@ fn main() {
             )),
         )),
     );*/
-    let regex = Regex::Char('b');
     let builder = NFABuilder::new();
     let node = builder.to_nfa(regex);
-    println!("{:#?}", node);
+    //  println!("{:#?}", node);
     println!("{}", node);
 }
